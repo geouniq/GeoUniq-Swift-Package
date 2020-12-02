@@ -675,11 +675,15 @@ extension Result : Swift.CustomDebugStringConvertible {
     @objc get
     @objc set(newValue)
   }
+  @objc open var confirmationConfidence: Swift.Int {
+    @objc get
+    @objc set(newValue)
+  }
   @objc open var nestedDetections: [GULocation] {
     @objc get
     @objc set(newValue)
   }
-  @objc public init(latitude: Swift.Double, longitude: Swift.Double, time: Foundation.Date, motionActivity: Swift.String, confirmedAt: Foundation.Date, accuracy: Foundation.NSNumber?, nestedDetections: [GULocation] = [GULocation]())
+  @objc public init(latitude: Swift.Double, longitude: Swift.Double, time: Foundation.Date, motionActivity: Swift.String, confirmedAt: Foundation.Date, accuracy: Foundation.NSNumber?, nestedDetections: [GULocation] = [GULocation](), confirmationConfidence: Swift.Int = 0)
   @objc open func getGULocation() -> [Swift.String : Swift.AnyObject]
   @objc override dynamic open var description: Swift.String {
     @objc get
@@ -838,6 +842,7 @@ public struct Log {
   public static func logLocationUploaderEngine(_ log: Swift.String)
   public static func logLocationUploaderEngineStateQueue(_ log: Swift.String)
   public static func logNewVisitEngine(_ log: Swift.String)
+  public static func logVisitEngineServer(_ log: Swift.String)
   public static func logPositionTrip(_ log: Swift.String)
   public static func logTestFunctionaly(_ log: Swift.String)
 }

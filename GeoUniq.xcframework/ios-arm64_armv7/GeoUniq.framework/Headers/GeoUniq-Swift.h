@@ -546,6 +546,8 @@ SWIFT_CLASS("_TtC7GeoUniq10GULocation")
 @property (nonatomic) double visitDuration;
 /// accuracy
 @property (nonatomic, strong) NSNumber * _Nullable accuracy;
+/// accuracy
+@property (nonatomic) NSInteger confirmationConfidence;
 /// nested detections inside location
 @property (nonatomic, copy) NSArray<GULocation *> * _Nonnull nestedDetections;
 /// Public constructor
@@ -559,7 +561,7 @@ SWIFT_CLASS("_TtC7GeoUniq10GULocation")
 ///
 /// \param accuracy accuracy of the location
 ///
-- (nonnull instancetype)initWithLatitude:(double)latitude longitude:(double)longitude time:(NSDate * _Nonnull)time motionActivity:(NSString * _Nonnull)motionActivity confirmedAt:(NSDate * _Nonnull)confirmedAt accuracy:(NSNumber * _Nullable)accuracy nestedDetections:(NSArray<GULocation *> * _Nonnull)nestedDetections OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithLatitude:(double)latitude longitude:(double)longitude time:(NSDate * _Nonnull)time motionActivity:(NSString * _Nonnull)motionActivity confirmedAt:(NSDate * _Nonnull)confirmedAt accuracy:(NSNumber * _Nullable)accuracy nestedDetections:(NSArray<GULocation *> * _Nonnull)nestedDetections confirmationConfidence:(NSInteger)confirmationConfidence OBJC_DESIGNATED_INITIALIZER;
 /// Obtain a representation of the location in the form:
 /// “latitude”: Double
 /// “longitude”: Double
@@ -1833,6 +1835,8 @@ SWIFT_CLASS("_TtC7GeoUniq10GULocation")
 @property (nonatomic) double visitDuration;
 /// accuracy
 @property (nonatomic, strong) NSNumber * _Nullable accuracy;
+/// accuracy
+@property (nonatomic) NSInteger confirmationConfidence;
 /// nested detections inside location
 @property (nonatomic, copy) NSArray<GULocation *> * _Nonnull nestedDetections;
 /// Public constructor
@@ -1846,7 +1850,7 @@ SWIFT_CLASS("_TtC7GeoUniq10GULocation")
 ///
 /// \param accuracy accuracy of the location
 ///
-- (nonnull instancetype)initWithLatitude:(double)latitude longitude:(double)longitude time:(NSDate * _Nonnull)time motionActivity:(NSString * _Nonnull)motionActivity confirmedAt:(NSDate * _Nonnull)confirmedAt accuracy:(NSNumber * _Nullable)accuracy nestedDetections:(NSArray<GULocation *> * _Nonnull)nestedDetections OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithLatitude:(double)latitude longitude:(double)longitude time:(NSDate * _Nonnull)time motionActivity:(NSString * _Nonnull)motionActivity confirmedAt:(NSDate * _Nonnull)confirmedAt accuracy:(NSNumber * _Nullable)accuracy nestedDetections:(NSArray<GULocation *> * _Nonnull)nestedDetections confirmationConfidence:(NSInteger)confirmationConfidence OBJC_DESIGNATED_INITIALIZER;
 /// Obtain a representation of the location in the form:
 /// “latitude”: Double
 /// “longitude”: Double
