@@ -1,7 +1,8 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.3 (swiftlang-1200.0.29.2 clang-1200.0.30.1)
+// swift-compiler-version: Apple Swift version 5.3.2 (swiftlang-1200.0.45 clang-1200.0.32.28)
 // swift-module-flags: -target armv7-apple-ios10.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name GeoUniq
 import AdSupport
+import AppTrackingTransparency
 import CoreData
 import CoreLocation
 import CoreMotion
@@ -216,6 +217,10 @@ public func == (lhs: NetworkReachabilityManager.NetworkReachabilityStatus, rhs: 
   @objc open func removeAllGUGeofence()
   @objc open func getGUGeofences() -> [GUGeofence]
   @objc open func getRemoteGUGeofences() -> [GUGeofence]
+  @available(iOS 14.0, *)
+  @objc open func getATTrackingAuthorizationStatus() -> AppTrackingTransparency.ATTrackingManager.AuthorizationStatus
+  @available(iOS 14, *)
+  @objc open func requestATTrackingAuthorization(completion: @escaping (AppTrackingTransparency.ATTrackingManager.AuthorizationStatus) -> Swift.Void)
   @objc deinit
 }
 @objc @_hasMissingDesignatedInitializers open class TaskDelegate : ObjectiveC.NSObject {
