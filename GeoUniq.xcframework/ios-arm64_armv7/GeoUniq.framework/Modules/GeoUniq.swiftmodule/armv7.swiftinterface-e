@@ -51,10 +51,10 @@ public enum AFError : Swift.Error {
     case jsonSerializationFailed(error: Swift.Error)
     case propertyListSerializationFailed(error: Swift.Error)
   }
-  case parameterEncodingFailed(reason: GeoUniq.AFError.ParameterEncodingFailureReason)
-  case multipartEncodingFailed(reason: GeoUniq.AFError.MultipartEncodingFailureReason)
-  case responseValidationFailed(reason: GeoUniq.AFError.ResponseValidationFailureReason)
-  case responseSerializationFailed(reason: GeoUniq.AFError.ResponseSerializationFailureReason)
+  case parameterEncodingFailed(reason: AFError.ParameterEncodingFailureReason)
+  case multipartEncodingFailed(reason: AFError.MultipartEncodingFailureReason)
+  case responseValidationFailed(reason: AFError.ResponseValidationFailureReason)
+  case responseSerializationFailed(reason: AFError.ResponseSerializationFailureReason)
 }
 extension AFError {
   public var isParameterEncodingError: Swift.Bool {
@@ -95,7 +95,7 @@ extension AFError : Foundation.LocalizedError {
     get
   }
 }
-public protocol PersistenceProtocolObject : GeoUniq.JsonParserProtocol {
+public protocol PersistenceProtocolObject : JsonParserProtocol {
   associatedtype returnType
   func storeWithKey(key: Swift.String)
   static func removeWithKey(key: Swift.String) -> Swift.Bool
@@ -113,18 +113,18 @@ extension PersistenceProtocolObject {
   public enum NetworkReachabilityStatus {
     case unknown
     case notReachable
-    case reachable(GeoUniq.NetworkReachabilityManager.ConnectionType)
+    case reachable(NetworkReachabilityManager.ConnectionType)
   }
   public enum ConnectionType {
     case ethernetOrWiFi
     case wwan
-    public static func == (a: GeoUniq.NetworkReachabilityManager.ConnectionType, b: GeoUniq.NetworkReachabilityManager.ConnectionType) -> Swift.Bool
+    public static func == (a: NetworkReachabilityManager.ConnectionType, b: NetworkReachabilityManager.ConnectionType) -> Swift.Bool
     public var hashValue: Swift.Int {
       get
     }
     public func hash(into hasher: inout Swift.Hasher)
   }
-  public typealias Listener = (GeoUniq.NetworkReachabilityManager.NetworkReachabilityStatus) -> Swift.Void
+  public typealias Listener = (NetworkReachabilityManager.NetworkReachabilityStatus) -> Swift.Void
   open var isReachable: Swift.Bool {
     get
   }
@@ -134,11 +134,11 @@ extension PersistenceProtocolObject {
   open var isReachableOnEthernetOrWiFi: Swift.Bool {
     get
   }
-  open var networkReachabilityStatus: GeoUniq.NetworkReachabilityManager.NetworkReachabilityStatus {
+  open var networkReachabilityStatus: NetworkReachabilityManager.NetworkReachabilityStatus {
     get
   }
   open var listenerQueue: Dispatch.DispatchQueue
-  open var listener: GeoUniq.NetworkReachabilityManager.Listener?
+  open var listener: NetworkReachabilityManager.Listener?
   convenience public init?(host: Swift.String)
   convenience public init?()
   @objc deinit
@@ -148,14 +148,14 @@ extension PersistenceProtocolObject {
 }
 extension NetworkReachabilityManager.NetworkReachabilityStatus : Swift.Equatable {
 }
-public func == (lhs: GeoUniq.NetworkReachabilityManager.NetworkReachabilityStatus, rhs: GeoUniq.NetworkReachabilityManager.NetworkReachabilityStatus) -> Swift.Bool
+public func == (lhs: NetworkReachabilityManager.NetworkReachabilityStatus, rhs: NetworkReachabilityManager.NetworkReachabilityStatus) -> Swift.Bool
 @objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers open class GeoUniq : ObjectiveC.NSObject {
   @objc public static let MAX_CUSTOM_ID_LENGTH: Swift.Int
-  @objc public static func sharedInstance() -> GeoUniq.GeoUniq
+  @objc public static func sharedInstance() -> GeoUniq
   @objc public static var FrameworkVersionName: Swift.String {
     @objc get
   }
-  @objc public static func sharedInstance(_ callbackDeviceId: @escaping (Swift.String) -> Swift.Void) -> GeoUniq.GeoUniq
+  @objc public static func sharedInstance(_ callbackDeviceId: @escaping (Swift.String) -> Swift.Void) -> GeoUniq
   @objc open func getMobileKey() -> Swift.String?
   @objc open func getDeviceId() -> Swift.String?
   @objc open func enable()
@@ -165,7 +165,7 @@ public func == (lhs: GeoUniq.NetworkReachabilityManager.NetworkReachabilityStatu
   @objc open func resetStartingTrackingGranularity()
   @objc open func getCurrentTrackingGranularity() -> Swift.Double
   @objc open func setCurrentTrackingGranularity(_ granularity: Swift.Double)
-  @objc open func getPosition(_ accuracy: Swift.Double, callback: GeoUniq.GUPositionReceiver)
+  @objc open func getPosition(_ accuracy: Swift.Double, callback: GUPositionReceiver)
   @objc open func enableDebug(_ enable: Swift.Bool)
   @objc open func isTrackingActive() -> Swift.Bool
   @objc open func backgroundFetch()
@@ -177,46 +177,46 @@ public func == (lhs: GeoUniq.NetworkReachabilityManager.NetworkReachabilityStatu
   @objc open func resetLabel()
   @available(iOS 11.0, *)
   @objc open func getMotionActivityPermission() -> CoreMotion.CMAuthorizationStatus
-  open func registerAllActivityChange(_ delegate: GeoUniq.GUActivityDelegate.Type)
-  open func registerActivityChange(_ delegate: GeoUniq.GUActivityDelegate.Type, motionTypes: [GeoUniq.GUMotionType])
-  open func registerActivityChange(_ delegate: GeoUniq.GUActivityDelegate.Type, motionType: GeoUniq.GUMotionType)
-  open func deregisterAll(_ delegate: GeoUniq.GUActivityDelegate.Type)
-  open func deregisterActvityChange(_ delegate: GeoUniq.GUActivityDelegate.Type, motionTypes: [GeoUniq.GUMotionType])
-  open func deregisterActvityChange(_ delegate: GeoUniq.GUActivityDelegate.Type, motionType: GeoUniq.GUMotionType)
-  open func getCurrentActivityRegistrations() -> [Swift.String : [GeoUniq.GUMotionType]]?
+  open func registerAllActivityChange(_ delegate: GUActivityDelegate.Type)
+  open func registerActivityChange(_ delegate: GUActivityDelegate.Type, motionTypes: [GUMotionType])
+  open func registerActivityChange(_ delegate: GUActivityDelegate.Type, motionType: GUMotionType)
+  open func deregisterAll(_ delegate: GUActivityDelegate.Type)
+  open func deregisterActvityChange(_ delegate: GUActivityDelegate.Type, motionTypes: [GUMotionType])
+  open func deregisterActvityChange(_ delegate: GUActivityDelegate.Type, motionType: GUMotionType)
+  open func getCurrentActivityRegistrations() -> [Swift.String : [GUMotionType]]?
   @available(*, deprecated, renamed: "getPrivacyConsents")
   @objc open func getConsentStatus() -> Swift.Bool
   @available(*, deprecated, renamed: "setPrivacyConsent")
   @objc open func setConsentStatus(isGranted: Swift.Bool)
   @available(*, deprecated, renamed: "showPrivacyPolicyAndSet")
-  @objc open func showConsentDialogAndSet(completion: @escaping GeoUniq.isGranted)
-  @objc open func showPrivacyPolicyAndSet(completion: @escaping (GeoUniq.ConsentsMap) -> ())
-  @objc open func showPrivacyPolicySwitchesAndSet(completion: @escaping (GeoUniq.ConsentsMap) -> ())
-  @objc open func setPrivacyConsent(_ consent: GeoUniq.ConsentItem, value: Swift.Bool)
-  @objc open func getPrivacyConsent(_ consent: GeoUniq.ConsentItem) -> Swift.Bool
-  @objc open func getPrivacyConsentsMap() -> GeoUniq.ConsentsMap
-  @objc open func getLastKnownLocation() -> GeoUniq.GULocation?
-  @objc open func getLocationHistory(_ from: Foundation.Date, to: Foundation.Date, sort: GeoUniq.GUSort, locationsReceiver: GeoUniq.GULocationHistoryReceiver)
+  @objc open func showConsentDialogAndSet(completion: @escaping isGranted)
+  @objc open func showPrivacyPolicyAndSet(completion: @escaping (ConsentsMap) -> ())
+  @objc open func showPrivacyPolicySwitchesAndSet(completion: @escaping (ConsentsMap) -> ())
+  @objc open func setPrivacyConsent(_ consent: ConsentItem, value: Swift.Bool)
+  @objc open func getPrivacyConsent(_ consent: ConsentItem) -> Swift.Bool
+  @objc open func getPrivacyConsentsMap() -> ConsentsMap
+  @objc open func getLastKnownLocation() -> GULocation?
+  @objc open func getLocationHistory(_ from: Foundation.Date, to: Foundation.Date, sort: GUSort, locationsReceiver: GULocationHistoryReceiver)
   @objc open func registerToGroupsWithName(_ name: Swift.String)
   @objc open func registerToGroupWithId(_ groupId: Swift.String)
-  @objc open func setCustomEndpoint(endpoint: GeoUniq.CustomEndpoint)
-  @objc open func getCustomEndpoint() -> GeoUniq.CustomEndpoint?
+  @objc open func setCustomEndpoint(endpoint: CustomEndpoint)
+  @objc open func getCustomEndpoint() -> CustomEndpoint?
   @objc open func removeCustomEndpoint()
   @objc open func enableCustomEndpoint()
   @objc open func disableCustomEndpoint()
   @objc open func isCustomEndpointEnabled() -> Swift.Bool
   @objc open func isLocationTrackingAvailable() -> Swift.Bool
-  @objc open func setTrackingListener(listener: GeoUniq.GUTrackingListener.Type)
-  @objc open func removeTrackingListener(listener: GeoUniq.GUTrackingListener.Type) -> Swift.Bool
-  @objc open func getTrackingListeners() -> [GeoUniq.GUTrackingListener.Type]?
+  @objc open func setTrackingListener(listener: GUTrackingListener.Type)
+  @objc open func removeTrackingListener(listener: GUTrackingListener.Type) -> Swift.Bool
+  @objc open func getTrackingListeners() -> [GUTrackingListener.Type]?
   @objc open func removeAllTrackingListeners()
   @objc open func setCustomId(_ customId: Swift.String) -> Swift.Bool
   @objc open func getCustomId() -> Swift.String?
-  @objc open func setGUGeofence(area: GeoUniq.GUCircularArea, listener: GeoUniq.GUGeofenceListener.Type, expirationDate: Foundation.Date? = nil) -> GeoUniq.GUGeofence
+  @objc open func setGUGeofence(area: GUCircularArea, listener: GUGeofenceListener.Type, expirationDate: Foundation.Date? = nil) -> GUGeofence
   @objc open func removeGUGeofence(id: Swift.String) -> Swift.Bool
   @objc open func removeAllGUGeofence()
-  @objc open func getGUGeofences() -> [GeoUniq.GUGeofence]
-  @objc open func getRemoteGUGeofences() -> [GeoUniq.GUGeofence]
+  @objc open func getGUGeofences() -> [GUGeofence]
+  @objc open func getRemoteGUGeofences() -> [GUGeofence]
   @available(iOS 14.0, *)
   @objc open func getATTrackingAuthorizationStatus() -> AppTrackingTransparency.ATTrackingManager.AuthorizationStatus
   @available(iOS 14, *)
@@ -229,9 +229,9 @@ public func == (lhs: GeoUniq.NetworkReachabilityManager.NetworkReachabilityStatu
   @objc override dynamic public init()
 }
 open class ServerTrustPolicyManager {
-  final public let policies: [Swift.String : GeoUniq.ServerTrustPolicy]
-  public init(policies: [Swift.String : GeoUniq.ServerTrustPolicy])
-  open func serverTrustPolicy(forHost host: Swift.String) -> GeoUniq.ServerTrustPolicy?
+  final public let policies: [Swift.String : ServerTrustPolicy]
+  public init(policies: [Swift.String : ServerTrustPolicy])
+  open func serverTrustPolicy(forHost host: Swift.String) -> ServerTrustPolicy?
   @objc deinit
 }
 public enum ServerTrustPolicy {
@@ -267,8 +267,8 @@ extension Timeline : Swift.CustomDebugStringConvertible {
 }
 @objc public protocol GUGeofenceListener {
   @objc init()
-  @objc func didEnterGUGeofence(_ geofence: GeoUniq.GUGeofence)
-  @objc func didExitGUGeofence(_ geofence: GeoUniq.GUGeofence)
+  @objc func didEnterGUGeofence(_ geofence: GUGeofence)
+  @objc func didExitGUGeofence(_ geofence: GUGeofence)
 }
 @objc public enum GUSort : Swift.Int {
   case timeAsc
@@ -297,189 +297,189 @@ public enum HTTPMethod : Swift.String {
 }
 public typealias Parameters = [Swift.String : Any]
 public protocol ParameterEncoding {
-  func encode(_ urlRequest: GeoUniq.URLRequestConvertible, with parameters: GeoUniq.Parameters?) throws -> Foundation.URLRequest
+  func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> Foundation.URLRequest
 }
-public struct URLEncoding : GeoUniq.ParameterEncoding {
+public struct URLEncoding : ParameterEncoding {
   public enum Destination {
     case methodDependent, queryString, httpBody
-    public static func == (a: GeoUniq.URLEncoding.Destination, b: GeoUniq.URLEncoding.Destination) -> Swift.Bool
+    public static func == (a: URLEncoding.Destination, b: URLEncoding.Destination) -> Swift.Bool
     public var hashValue: Swift.Int {
       get
     }
     public func hash(into hasher: inout Swift.Hasher)
   }
-  public static var `default`: GeoUniq.URLEncoding {
+  public static var `default`: URLEncoding {
     get
   }
-  public static var methodDependent: GeoUniq.URLEncoding {
+  public static var methodDependent: URLEncoding {
     get
   }
-  public static var queryString: GeoUniq.URLEncoding {
+  public static var queryString: URLEncoding {
     get
   }
-  public static var httpBody: GeoUniq.URLEncoding {
+  public static var httpBody: URLEncoding {
     get
   }
-  public let destination: GeoUniq.URLEncoding.Destination
-  public init(destination: GeoUniq.URLEncoding.Destination = .methodDependent)
-  public func encode(_ urlRequest: GeoUniq.URLRequestConvertible, with parameters: GeoUniq.Parameters?) throws -> Foundation.URLRequest
+  public let destination: URLEncoding.Destination
+  public init(destination: URLEncoding.Destination = .methodDependent)
+  public func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> Foundation.URLRequest
   public func queryComponents(fromKey key: Swift.String, value: Any) -> [(Swift.String, Swift.String)]
   public func escape(_ string: Swift.String) -> Swift.String
 }
-public struct JSONEncoding : GeoUniq.ParameterEncoding {
-  public static var `default`: GeoUniq.JSONEncoding {
+public struct JSONEncoding : ParameterEncoding {
+  public static var `default`: JSONEncoding {
     get
   }
-  public static var prettyPrinted: GeoUniq.JSONEncoding {
+  public static var prettyPrinted: JSONEncoding {
     get
   }
   public let options: Foundation.JSONSerialization.WritingOptions
   public init(options: Foundation.JSONSerialization.WritingOptions = [])
-  public func encode(_ urlRequest: GeoUniq.URLRequestConvertible, with parameters: GeoUniq.Parameters?) throws -> Foundation.URLRequest
+  public func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> Foundation.URLRequest
 }
-public struct PropertyListEncoding : GeoUniq.ParameterEncoding {
-  public static var `default`: GeoUniq.PropertyListEncoding {
+public struct PropertyListEncoding : ParameterEncoding {
+  public static var `default`: PropertyListEncoding {
     get
   }
-  public static var xml: GeoUniq.PropertyListEncoding {
+  public static var xml: PropertyListEncoding {
     get
   }
-  public static var binary: GeoUniq.PropertyListEncoding {
+  public static var binary: PropertyListEncoding {
     get
   }
   public let format: Foundation.PropertyListSerialization.PropertyListFormat
   public let options: Foundation.PropertyListSerialization.WriteOptions
   public init(format: Foundation.PropertyListSerialization.PropertyListFormat = .xml, options: Foundation.PropertyListSerialization.WriteOptions = 0)
-  public func encode(_ urlRequest: GeoUniq.URLRequestConvertible, with parameters: GeoUniq.Parameters?) throws -> Foundation.URLRequest
+  public func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -> Foundation.URLRequest
 }
 public protocol DataResponseSerializerProtocol {
   associatedtype SerializedObject
-  var serializeResponse: (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.Data?, Swift.Error?) -> GeoUniq.Result<Self.SerializedObject> { get }
+  var serializeResponse: (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.Data?, Swift.Error?) -> Result<Self.SerializedObject> { get }
 }
-public struct DataResponseSerializer<Value> : GeoUniq.DataResponseSerializerProtocol {
+public struct DataResponseSerializer<Value> : DataResponseSerializerProtocol {
   public typealias SerializedObject = Value
-  public var serializeResponse: (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.Data?, Swift.Error?) -> GeoUniq.Result<Value>
-  public init(serializeResponse: @escaping (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.Data?, Swift.Error?) -> GeoUniq.Result<Value>)
+  public var serializeResponse: (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.Data?, Swift.Error?) -> Result<Value>
+  public init(serializeResponse: @escaping (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.Data?, Swift.Error?) -> Result<Value>)
 }
 public protocol DownloadResponseSerializerProtocol {
   associatedtype SerializedObject
-  var serializeResponse: (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.URL?, Swift.Error?) -> GeoUniq.Result<Self.SerializedObject> { get }
+  var serializeResponse: (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.URL?, Swift.Error?) -> Result<Self.SerializedObject> { get }
 }
-public struct DownloadResponseSerializer<Value> : GeoUniq.DownloadResponseSerializerProtocol {
+public struct DownloadResponseSerializer<Value> : DownloadResponseSerializerProtocol {
   public typealias SerializedObject = Value
-  public var serializeResponse: (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.URL?, Swift.Error?) -> GeoUniq.Result<Value>
-  public init(serializeResponse: @escaping (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.URL?, Swift.Error?) -> GeoUniq.Result<Value>)
+  public var serializeResponse: (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.URL?, Swift.Error?) -> Result<Value>
+  public init(serializeResponse: @escaping (Foundation.URLRequest?, Foundation.HTTPURLResponse?, Foundation.URL?, Swift.Error?) -> Result<Value>)
 }
 extension DataRequest {
   @discardableResult
-  public func response(queue: Dispatch.DispatchQueue? = nil, completionHandler: @escaping (GeoUniq.DefaultDataResponse) -> Swift.Void) -> Self
+  public func response(queue: Dispatch.DispatchQueue? = nil, completionHandler: @escaping (DefaultDataResponse) -> Swift.Void) -> Self
   @discardableResult
-  public func response<T>(queue: Dispatch.DispatchQueue? = nil, responseSerializer: T, completionHandler: @escaping (GeoUniq.DataResponse<T.SerializedObject>) -> Swift.Void) -> Self where T : GeoUniq.DataResponseSerializerProtocol
+  public func response<T>(queue: Dispatch.DispatchQueue? = nil, responseSerializer: T, completionHandler: @escaping (DataResponse<T.SerializedObject>) -> Swift.Void) -> Self where T : DataResponseSerializerProtocol
 }
 extension DownloadRequest {
   @discardableResult
-  public func response(queue: Dispatch.DispatchQueue? = nil, completionHandler: @escaping (GeoUniq.DefaultDownloadResponse) -> Swift.Void) -> Self
+  public func response(queue: Dispatch.DispatchQueue? = nil, completionHandler: @escaping (DefaultDownloadResponse) -> Swift.Void) -> Self
   @discardableResult
-  public func response<T>(queue: Dispatch.DispatchQueue? = nil, responseSerializer: T, completionHandler: @escaping (GeoUniq.DownloadResponse<T.SerializedObject>) -> Swift.Void) -> Self where T : GeoUniq.DownloadResponseSerializerProtocol
+  public func response<T>(queue: Dispatch.DispatchQueue? = nil, responseSerializer: T, completionHandler: @escaping (DownloadResponse<T.SerializedObject>) -> Swift.Void) -> Self where T : DownloadResponseSerializerProtocol
 }
 extension Request {
-  public static func serializeResponseData(response: Foundation.HTTPURLResponse?, data: Foundation.Data?, error: Swift.Error?) -> GeoUniq.Result<Foundation.Data>
+  public static func serializeResponseData(response: Foundation.HTTPURLResponse?, data: Foundation.Data?, error: Swift.Error?) -> Result<Foundation.Data>
 }
 extension DataRequest {
-  public static func dataResponseSerializer() -> GeoUniq.DataResponseSerializer<Foundation.Data>
+  public static func dataResponseSerializer() -> DataResponseSerializer<Foundation.Data>
   @discardableResult
-  public func responseData(queue: Dispatch.DispatchQueue? = nil, completionHandler: @escaping (GeoUniq.DataResponse<Foundation.Data>) -> Swift.Void) -> Self
+  public func responseData(queue: Dispatch.DispatchQueue? = nil, completionHandler: @escaping (DataResponse<Foundation.Data>) -> Swift.Void) -> Self
 }
 extension DownloadRequest {
-  public static func dataResponseSerializer() -> GeoUniq.DownloadResponseSerializer<Foundation.Data>
+  public static func dataResponseSerializer() -> DownloadResponseSerializer<Foundation.Data>
   @discardableResult
-  public func responseData(queue: Dispatch.DispatchQueue? = nil, completionHandler: @escaping (GeoUniq.DownloadResponse<Foundation.Data>) -> Swift.Void) -> Self
+  public func responseData(queue: Dispatch.DispatchQueue? = nil, completionHandler: @escaping (DownloadResponse<Foundation.Data>) -> Swift.Void) -> Self
 }
 extension Request {
-  public static func serializeResponseString(encoding: Swift.String.Encoding?, response: Foundation.HTTPURLResponse?, data: Foundation.Data?, error: Swift.Error?) -> GeoUniq.Result<Swift.String>
+  public static func serializeResponseString(encoding: Swift.String.Encoding?, response: Foundation.HTTPURLResponse?, data: Foundation.Data?, error: Swift.Error?) -> Result<Swift.String>
 }
 extension DataRequest {
-  public static func stringResponseSerializer(encoding: Swift.String.Encoding? = nil) -> GeoUniq.DataResponseSerializer<Swift.String>
+  public static func stringResponseSerializer(encoding: Swift.String.Encoding? = nil) -> DataResponseSerializer<Swift.String>
   @discardableResult
-  public func responseString(queue: Dispatch.DispatchQueue? = nil, encoding: Swift.String.Encoding? = nil, completionHandler: @escaping (GeoUniq.DataResponse<Swift.String>) -> Swift.Void) -> Self
+  public func responseString(queue: Dispatch.DispatchQueue? = nil, encoding: Swift.String.Encoding? = nil, completionHandler: @escaping (DataResponse<Swift.String>) -> Swift.Void) -> Self
 }
 extension DownloadRequest {
-  public static func stringResponseSerializer(encoding: Swift.String.Encoding? = nil) -> GeoUniq.DownloadResponseSerializer<Swift.String>
+  public static func stringResponseSerializer(encoding: Swift.String.Encoding? = nil) -> DownloadResponseSerializer<Swift.String>
   @discardableResult
-  public func responseString(queue: Dispatch.DispatchQueue? = nil, encoding: Swift.String.Encoding? = nil, completionHandler: @escaping (GeoUniq.DownloadResponse<Swift.String>) -> Swift.Void) -> Self
+  public func responseString(queue: Dispatch.DispatchQueue? = nil, encoding: Swift.String.Encoding? = nil, completionHandler: @escaping (DownloadResponse<Swift.String>) -> Swift.Void) -> Self
 }
 extension Request {
-  public static func serializeResponseJSON(options: Foundation.JSONSerialization.ReadingOptions, response: Foundation.HTTPURLResponse?, data: Foundation.Data?, error: Swift.Error?) -> GeoUniq.Result<Any>
+  public static func serializeResponseJSON(options: Foundation.JSONSerialization.ReadingOptions, response: Foundation.HTTPURLResponse?, data: Foundation.Data?, error: Swift.Error?) -> Result<Any>
 }
 extension DataRequest {
-  public static func jsonResponseSerializer(options: Foundation.JSONSerialization.ReadingOptions = .allowFragments) -> GeoUniq.DataResponseSerializer<Any>
+  public static func jsonResponseSerializer(options: Foundation.JSONSerialization.ReadingOptions = .allowFragments) -> DataResponseSerializer<Any>
   @discardableResult
-  public func responseJSON(queue: Dispatch.DispatchQueue? = nil, options: Foundation.JSONSerialization.ReadingOptions = .allowFragments, completionHandler: @escaping (GeoUniq.DataResponse<Any>) -> Swift.Void) -> Self
+  public func responseJSON(queue: Dispatch.DispatchQueue? = nil, options: Foundation.JSONSerialization.ReadingOptions = .allowFragments, completionHandler: @escaping (DataResponse<Any>) -> Swift.Void) -> Self
 }
 extension DownloadRequest {
-  public static func jsonResponseSerializer(options: Foundation.JSONSerialization.ReadingOptions = .allowFragments) -> GeoUniq.DownloadResponseSerializer<Any>
+  public static func jsonResponseSerializer(options: Foundation.JSONSerialization.ReadingOptions = .allowFragments) -> DownloadResponseSerializer<Any>
   @discardableResult
-  public func responseJSON(queue: Dispatch.DispatchQueue? = nil, options: Foundation.JSONSerialization.ReadingOptions = .allowFragments, completionHandler: @escaping (GeoUniq.DownloadResponse<Any>) -> Swift.Void) -> Self
+  public func responseJSON(queue: Dispatch.DispatchQueue? = nil, options: Foundation.JSONSerialization.ReadingOptions = .allowFragments, completionHandler: @escaping (DownloadResponse<Any>) -> Swift.Void) -> Self
 }
 extension Request {
-  public static func serializeResponsePropertyList(options: Foundation.PropertyListSerialization.ReadOptions, response: Foundation.HTTPURLResponse?, data: Foundation.Data?, error: Swift.Error?) -> GeoUniq.Result<Any>
+  public static func serializeResponsePropertyList(options: Foundation.PropertyListSerialization.ReadOptions, response: Foundation.HTTPURLResponse?, data: Foundation.Data?, error: Swift.Error?) -> Result<Any>
 }
 extension DataRequest {
-  public static func propertyListResponseSerializer(options: Foundation.PropertyListSerialization.ReadOptions = []) -> GeoUniq.DataResponseSerializer<Any>
+  public static func propertyListResponseSerializer(options: Foundation.PropertyListSerialization.ReadOptions = []) -> DataResponseSerializer<Any>
   @discardableResult
-  public func responsePropertyList(queue: Dispatch.DispatchQueue? = nil, options: Foundation.PropertyListSerialization.ReadOptions = [], completionHandler: @escaping (GeoUniq.DataResponse<Any>) -> Swift.Void) -> Self
+  public func responsePropertyList(queue: Dispatch.DispatchQueue? = nil, options: Foundation.PropertyListSerialization.ReadOptions = [], completionHandler: @escaping (DataResponse<Any>) -> Swift.Void) -> Self
 }
 extension DownloadRequest {
-  public static func propertyListResponseSerializer(options: Foundation.PropertyListSerialization.ReadOptions = []) -> GeoUniq.DownloadResponseSerializer<Any>
+  public static func propertyListResponseSerializer(options: Foundation.PropertyListSerialization.ReadOptions = []) -> DownloadResponseSerializer<Any>
   @discardableResult
-  public func responsePropertyList(queue: Dispatch.DispatchQueue? = nil, options: Foundation.PropertyListSerialization.ReadOptions = [], completionHandler: @escaping (GeoUniq.DownloadResponse<Any>) -> Swift.Void) -> Self
+  public func responsePropertyList(queue: Dispatch.DispatchQueue? = nil, options: Foundation.PropertyListSerialization.ReadOptions = [], completionHandler: @escaping (DownloadResponse<Any>) -> Swift.Void) -> Self
 }
-extension Double : GeoUniq.PersistenceProtocol {
+extension Double : PersistenceProtocol {
   public typealias returnType = Swift.Double
-  public func storeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String)
-  public static func removeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool
-  public static func readWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Double?
+  public func storeWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String)
+  public static func removeWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool
+  public static func readWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Double?
 }
-extension Int : GeoUniq.PersistenceProtocol {
+extension Int : PersistenceProtocol {
   public typealias returnType = Swift.Int
-  public func storeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String)
-  public static func removeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool
-  public static func readWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Int?
+  public func storeWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String)
+  public static func removeWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool
+  public static func readWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Int?
 }
-extension String : GeoUniq.PersistenceProtocol {
+extension String : PersistenceProtocol {
   public typealias returnType = Swift.String
-  public func storeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String)
-  public static func removeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool
-  public static func readWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.String?
+  public func storeWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String)
+  public static func removeWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool
+  public static func readWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.String?
 }
-extension NSDictionary : GeoUniq.PersistenceProtocol {
+extension NSDictionary : PersistenceProtocol {
   public typealias returnType = Foundation.NSDictionary
-  public func storeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String)
-  public static func removeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool
-  public static func readWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Foundation.NSDictionary?
+  public func storeWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String)
+  public static func removeWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool
+  public static func readWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Foundation.NSDictionary?
 }
-extension Bool : GeoUniq.PersistenceProtocol {
+extension Bool : PersistenceProtocol {
   public typealias returnType = Swift.Bool
-  public func storeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String)
-  public static func removeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool
-  public static func readWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool?
+  public func storeWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String)
+  public static func removeWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool
+  public static func readWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool?
 }
-extension Date : GeoUniq.PersistenceProtocol {
+extension Date : PersistenceProtocol {
   public typealias returnType = Foundation.Date
-  public func storeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String)
-  public static func removeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool
-  public static func readWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Foundation.Date?
+  public func storeWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String)
+  public static func removeWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Swift.Bool
+  public static func readWithKey(persistenceManager: PersistenceManagerAPI = PersistenceManager.shared, key: Swift.String) -> Foundation.Date?
 }
-extension CLLocation : GeoUniq.PersistenceProtocolObject {
+extension CLLocation : PersistenceProtocolObject {
   public typealias returnType = CoreLocation.CLLocation
-  public static func decodeJsonObject(json: GeoUniq.JSON) -> CoreLocation.CLLocation?
-  public func encodeJsonObject() -> GeoUniq.JSON?
+  public static func decodeJsonObject(json: JSON) -> CoreLocation.CLLocation?
+  public func encodeJsonObject() -> JSON?
   public typealias DecodableType = CoreLocation.CLLocation
 }
-extension NSError : GeoUniq.PersistenceProtocolObject {
+extension NSError : PersistenceProtocolObject {
   public typealias returnType = Foundation.NSError
-  public static func decodeJsonObject(json: GeoUniq.JSON) -> Foundation.NSError?
-  public func encodeJsonObject() -> GeoUniq.JSON?
+  public static func decodeJsonObject(json: JSON) -> Foundation.NSError?
+  public func encodeJsonObject() -> JSON?
   public typealias DecodableType = Foundation.NSError
 }
 public protocol PersistenceManagerAPI {
@@ -520,8 +520,8 @@ public protocol PersistenceManagerAPI {
   func readRegisteredActivity() -> [Swift.String : [Swift.String]]?
   func readData(byKey: Swift.String) -> Foundation.Data?
 }
-@_hasMissingDesignatedInitializers public class PersistenceManager : GeoUniq.PersistenceManagerAPI {
-  public static var shared: GeoUniq.PersistenceManager {
+@_hasMissingDesignatedInitializers public class PersistenceManager : PersistenceManagerAPI {
+  public static var shared: PersistenceManager {
     get
   }
   @objc deinit
@@ -584,13 +584,13 @@ extension PersistenceManager {
   @objc open var id: Swift.String {
     get
   }
-  @objc open var area: GeoUniq.GUCircularArea {
+  @objc open var area: GUCircularArea {
     get
   }
   @objc open var callBackClass: Swift.String {
     get
   }
-  @objc open var status: GeoUniq.GUGeofence.Status {
+  @objc open var status: GUGeofence.Status {
     get
   }
   @objc open var expirationDate: Foundation.Date? {
@@ -632,7 +632,7 @@ extension Result : Swift.CustomDebugStringConvertible {
   }
 }
 @_hasMissingDesignatedInitializers @objc open class GUMotionActivity : ObjectiveC.NSObject {
-  @objc open var type: GeoUniq.GUMotionType {
+  @objc open var type: GUMotionType {
     get
   }
   @objc open var startTime: Foundation.Date {
@@ -649,7 +649,7 @@ extension Result : Swift.CustomDebugStringConvertible {
 }
 @objc public protocol GUActivityDelegate {
   @objc init()
-  @objc func onActivityChanged(started: GeoUniq.GUMotionActivity, finished: GeoUniq.GUMotionActivity)
+  @objc func onActivityChanged(started: GUMotionActivity, finished: GUMotionActivity)
 }
 @objc open class GULocation : ObjectiveC.NSObject {
   @objc open var latitude: Swift.Double {
@@ -684,11 +684,11 @@ extension Result : Swift.CustomDebugStringConvertible {
     @objc get
     @objc set(newValue)
   }
-  @objc open var nestedDetections: [GeoUniq.GULocation] {
+  @objc open var nestedDetections: [GULocation] {
     @objc get
     @objc set(newValue)
   }
-  @objc public init(latitude: Swift.Double, longitude: Swift.Double, time: Foundation.Date, motionActivity: Swift.String, confirmedAt: Foundation.Date, accuracy: Foundation.NSNumber?, nestedDetections: [GeoUniq.GULocation] = [GULocation](), confirmationConfidence: Swift.Int = 0)
+  @objc public init(latitude: Swift.Double, longitude: Swift.Double, time: Foundation.Date, motionActivity: Swift.String, confirmedAt: Foundation.Date, accuracy: Foundation.NSNumber?, nestedDetections: [GULocation] = [GULocation](), confirmationConfidence: Swift.Int = 0)
   @objc open func getGULocation() -> [Swift.String : Swift.AnyObject]
   @objc override dynamic open var description: Swift.String {
     @objc get
@@ -706,9 +706,9 @@ public struct DataResponse<Value> {
   public let request: Foundation.URLRequest?
   public let response: Foundation.HTTPURLResponse?
   public let data: Foundation.Data?
-  public let result: GeoUniq.Result<Value>
-  public let timeline: GeoUniq.Timeline
-  public init(request: Foundation.URLRequest?, response: Foundation.HTTPURLResponse?, data: Foundation.Data?, result: GeoUniq.Result<Value>, timeline: GeoUniq.Timeline = Timeline())
+  public let result: Result<Value>
+  public let timeline: Timeline
+  public init(request: Foundation.URLRequest?, response: Foundation.HTTPURLResponse?, data: Foundation.Data?, result: Result<Value>, timeline: Timeline = Timeline())
 }
 extension DataResponse : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
   public var description: Swift.String {
@@ -732,9 +732,9 @@ public struct DownloadResponse<Value> {
   public let temporaryURL: Foundation.URL?
   public let destinationURL: Foundation.URL?
   public let resumeData: Foundation.Data?
-  public let result: GeoUniq.Result<Value>
-  public let timeline: GeoUniq.Timeline
-  public init(request: Foundation.URLRequest?, response: Foundation.HTTPURLResponse?, temporaryURL: Foundation.URL?, destinationURL: Foundation.URL?, resumeData: Foundation.Data?, result: GeoUniq.Result<Value>, timeline: GeoUniq.Timeline = Timeline())
+  public let result: Result<Value>
+  public let timeline: Timeline
+  public init(request: Foundation.URLRequest?, response: Foundation.HTTPURLResponse?, temporaryURL: Foundation.URL?, destinationURL: Foundation.URL?, resumeData: Foundation.Data?, result: Result<Value>, timeline: Timeline = Timeline())
 }
 extension DownloadResponse : Swift.CustomStringConvertible, Swift.CustomDebugStringConvertible {
   public var description: Swift.String {
@@ -745,12 +745,12 @@ extension DownloadResponse : Swift.CustomStringConvertible, Swift.CustomDebugStr
   }
 }
 @objc public protocol GULocationHistoryReceiver {
-  @objc func onSuccess(_ locations: [GeoUniq.GULocation])
+  @objc func onSuccess(_ locations: [GULocation])
   @objc func onError()
 }
 @objc public protocol GUTrackingListener {
   @objc init()
-  @objc func onNewLocationUpdate(_ location: GeoUniq.GULocation)
+  @objc func onNewLocationUpdate(_ location: GULocation)
 }
 extension NSNotification.Name {
   public struct Task {
@@ -781,11 +781,11 @@ extension Notification {
 }
 @_hasMissingDesignatedInitializers @objc public class ConsentsMap : ObjectiveC.NSObject {
   @objc public func containsValue(value: Swift.Bool) -> Swift.Bool
-  @objc public func get(key: GeoUniq.ConsentItem) -> Swift.Bool
+  @objc public func get(key: ConsentItem) -> Swift.Bool
   @objc override dynamic public init()
   @objc deinit
 }
-public typealias consentsClosure = (GeoUniq.ConsentsMap) -> ()
+public typealias consentsClosure = (ConsentsMap) -> ()
 extension ConsentItem : Swift.CustomStringConvertible {
   public var description: Swift.String {
     get
@@ -867,13 +867,13 @@ public protocol RequestAdapter {
 }
 public typealias RequestRetryCompletion = (Swift.Bool, Foundation.TimeInterval) -> Swift.Void
 public protocol RequestRetrier {
-  func should(_ manager: GeoUniq.SessionManager, retry request: GeoUniq.Request, with error: Swift.Error, completion: (Swift.Bool, Foundation.TimeInterval) -> Swift.Void)
+  func should(_ manager: SessionManager, retry request: Request, with error: Swift.Error, completion: (Swift.Bool, Foundation.TimeInterval) -> Swift.Void)
 }
 @_hasMissingDesignatedInitializers open class Request {
   public typealias ProgressHandler = (Foundation.Progress) -> Swift.Void
   public typealias DownloadProgressHandler = (Swift.Int64, Swift.Int64, Swift.Int64) -> Swift.Void
   public typealias UploadProgressHandler = (Swift.Int64, Swift.Int64, Swift.Int64) -> Swift.Void
-  open var delegate: GeoUniq.TaskDelegate {
+  open var delegate: TaskDelegate {
     get
   }
   open var task: Foundation.URLSessionTask {
@@ -906,29 +906,29 @@ extension Request : Swift.CustomDebugStringConvertible {
     get
   }
 }
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers open class DataRequest : GeoUniq.Request {
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers open class DataRequest : Request {
   open var progress: Foundation.Progress {
     get
   }
   @discardableResult
   open func stream(closure: ((Foundation.Data) -> Swift.Void)? = nil) -> Self
   @discardableResult
-  open func downloadProgress(queue: Dispatch.DispatchQueue = DispatchQueue.main, closure: @escaping GeoUniq.DataRequest.ProgressHandler) -> Self
+  open func downloadProgress(queue: Dispatch.DispatchQueue = DispatchQueue.main, closure: @escaping DataRequest.ProgressHandler) -> Self
   @discardableResult
-  open func downloadProgress(queue: Dispatch.DispatchQueue = DispatchQueue.main, closure: @escaping GeoUniq.DataRequest.DownloadProgressHandler) -> Self
+  open func downloadProgress(queue: Dispatch.DispatchQueue = DispatchQueue.main, closure: @escaping DataRequest.DownloadProgressHandler) -> Self
   @objc deinit
 }
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers open class DownloadRequest : GeoUniq.Request {
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers open class DownloadRequest : Request {
   public struct DownloadOptions : Swift.OptionSet {
     public let rawValue: Swift.UInt
-    public static let createIntermediateDirectories: GeoUniq.DownloadRequest.DownloadOptions
-    public static let removePreviousFile: GeoUniq.DownloadRequest.DownloadOptions
+    public static let createIntermediateDirectories: DownloadRequest.DownloadOptions
+    public static let removePreviousFile: DownloadRequest.DownloadOptions
     public init(rawValue: Swift.UInt)
-    public typealias Element = GeoUniq.DownloadRequest.DownloadOptions
-    public typealias ArrayLiteralElement = GeoUniq.DownloadRequest.DownloadOptions
+    public typealias Element = DownloadRequest.DownloadOptions
+    public typealias ArrayLiteralElement = DownloadRequest.DownloadOptions
     public typealias RawValue = Swift.UInt
   }
-  public typealias DownloadFileDestination = (Foundation.URL, Foundation.HTTPURLResponse) -> (destinationURL: Foundation.URL, options: GeoUniq.DownloadRequest.DownloadOptions)
+  public typealias DownloadFileDestination = (Foundation.URL, Foundation.HTTPURLResponse) -> (destinationURL: Foundation.URL, options: DownloadRequest.DownloadOptions)
   open var resumeData: Foundation.Data? {
     get
   }
@@ -937,72 +937,72 @@ extension Request : Swift.CustomDebugStringConvertible {
   }
   override open func cancel()
   @discardableResult
-  open func downloadProgress(queue: Dispatch.DispatchQueue = DispatchQueue.main, closure: @escaping GeoUniq.DownloadRequest.ProgressHandler) -> Self
+  open func downloadProgress(queue: Dispatch.DispatchQueue = DispatchQueue.main, closure: @escaping DownloadRequest.ProgressHandler) -> Self
   @discardableResult
-  open func downloadProgress(queue: Dispatch.DispatchQueue = DispatchQueue.main, closure: @escaping GeoUniq.DownloadRequest.DownloadProgressHandler) -> Self
-  open class func suggestedDownloadDestination(for directory: Foundation.FileManager.SearchPathDirectory = .documentDirectory, in domain: Foundation.FileManager.SearchPathDomainMask = .userDomainMask) -> GeoUniq.DownloadRequest.DownloadFileDestination
+  open func downloadProgress(queue: Dispatch.DispatchQueue = DispatchQueue.main, closure: @escaping DownloadRequest.DownloadProgressHandler) -> Self
+  open class func suggestedDownloadDestination(for directory: Foundation.FileManager.SearchPathDirectory = .documentDirectory, in domain: Foundation.FileManager.SearchPathDomainMask = .userDomainMask) -> DownloadRequest.DownloadFileDestination
   @objc deinit
 }
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers open class UploadRequest : GeoUniq.DataRequest {
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers open class UploadRequest : DataRequest {
   open var uploadProgress: Foundation.Progress {
     get
   }
   @discardableResult
-  open func uploadProgress(queue: Dispatch.DispatchQueue = DispatchQueue.main, closure: @escaping GeoUniq.UploadRequest.ProgressHandler) -> Self
+  open func uploadProgress(queue: Dispatch.DispatchQueue = DispatchQueue.main, closure: @escaping UploadRequest.ProgressHandler) -> Self
   @discardableResult
-  open func uploadProgress(queue: Dispatch.DispatchQueue = DispatchQueue.main, closure: @escaping GeoUniq.UploadRequest.UploadProgressHandler) -> Self
+  open func uploadProgress(queue: Dispatch.DispatchQueue = DispatchQueue.main, closure: @escaping UploadRequest.UploadProgressHandler) -> Self
   @objc deinit
 }
-@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers open class StreamRequest : GeoUniq.Request {
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers open class StreamRequest : Request {
   @objc deinit
 }
 open class SessionManager {
   public enum MultipartFormDataEncodingResult {
-    case success(request: GeoUniq.UploadRequest, streamingFromDisk: Swift.Bool, streamFileURL: Foundation.URL?)
+    case success(request: UploadRequest, streamingFromDisk: Swift.Bool, streamFileURL: Foundation.URL?)
     case failure(Swift.Error)
   }
-  public static let `default`: GeoUniq.SessionManager
+  public static let `default`: SessionManager
   public static let defaultHTTPHeaders: [Swift.String : Swift.String]
   public static let multipartFormDataEncodingMemoryThreshold: Swift.UInt64
   final public let session: Foundation.URLSession
-  final public let delegate: GeoUniq.SessionDelegate
+  final public let delegate: GuSessionDelegate
   open var startRequestsImmediately: Swift.Bool
-  open var adapter: GeoUniq.RequestAdapter?
-  open var retrier: GeoUniq.RequestRetrier? {
+  open var adapter: RequestAdapter?
+  open var retrier: RequestRetrier? {
     get
     set
   }
   open var backgroundCompletionHandler: (() -> Swift.Void)?
-  public init(configuration: Foundation.URLSessionConfiguration = URLSessionConfiguration.default, delegate: GeoUniq.SessionDelegate = SessionDelegate(), serverTrustPolicyManager: GeoUniq.ServerTrustPolicyManager? = nil)
-  public init?(session: Foundation.URLSession, delegate: GeoUniq.SessionDelegate, serverTrustPolicyManager: GeoUniq.ServerTrustPolicyManager? = nil)
+  public init(configuration: Foundation.URLSessionConfiguration = URLSessionConfiguration.default, delegate: GuSessionDelegate = GuSessionDelegate(), serverTrustPolicyManager: ServerTrustPolicyManager? = nil)
+  public init?(session: Foundation.URLSession, delegate: GuSessionDelegate, serverTrustPolicyManager: ServerTrustPolicyManager? = nil)
   @objc deinit
   @discardableResult
-  open func request(_ urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod = .get, parameters: GeoUniq.Parameters? = nil, encoding: GeoUniq.ParameterEncoding = URLEncoding.default, headers: [Swift.String : Swift.String]? = nil) -> GeoUniq.DataRequest
-  open func request(resource urlRequest: GeoUniq.URLRequestConvertible) -> GeoUniq.DataRequest
+  open func request(_ urlString: URLStringConvertible, method: HTTPMethod = .get, parameters: Parameters? = nil, encoding: ParameterEncoding = URLEncoding.default, headers: [Swift.String : Swift.String]? = nil) -> DataRequest
+  open func request(resource urlRequest: URLRequestConvertible) -> DataRequest
   @discardableResult
-  open func download(_ urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod = .get, parameters: GeoUniq.Parameters? = nil, encoding: GeoUniq.ParameterEncoding = URLEncoding.default, headers: [Swift.String : Swift.String]? = nil, to destination: GeoUniq.DownloadRequest.DownloadFileDestination? = nil) -> GeoUniq.DownloadRequest
+  open func download(_ urlString: URLStringConvertible, method: HTTPMethod = .get, parameters: Parameters? = nil, encoding: ParameterEncoding = URLEncoding.default, headers: [Swift.String : Swift.String]? = nil, to destination: DownloadRequest.DownloadFileDestination? = nil) -> DownloadRequest
   @discardableResult
-  open func download(resource urlRequest: GeoUniq.URLRequestConvertible, to destination: GeoUniq.DownloadRequest.DownloadFileDestination? = nil) -> GeoUniq.DownloadRequest
+  open func download(resource urlRequest: URLRequestConvertible, to destination: DownloadRequest.DownloadFileDestination? = nil) -> DownloadRequest
   @discardableResult
-  open func download(resourceWithin resumeData: Foundation.Data, to destination: GeoUniq.DownloadRequest.DownloadFileDestination? = nil) -> GeoUniq.DownloadRequest
+  open func download(resourceWithin resumeData: Foundation.Data, to destination: DownloadRequest.DownloadFileDestination? = nil) -> DownloadRequest
   @discardableResult
-  open func upload(_ fileURL: Foundation.URL, to urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil) -> GeoUniq.UploadRequest
+  open func upload(_ fileURL: Foundation.URL, to urlString: URLStringConvertible, method: HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil) -> UploadRequest
   @discardableResult
-  open func upload(_ fileURL: Foundation.URL, with urlRequest: GeoUniq.URLRequestConvertible) -> GeoUniq.UploadRequest
+  open func upload(_ fileURL: Foundation.URL, with urlRequest: URLRequestConvertible) -> UploadRequest
   @discardableResult
-  open func upload(_ data: Foundation.Data, to urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil) -> GeoUniq.UploadRequest
+  open func upload(_ data: Foundation.Data, to urlString: URLStringConvertible, method: HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil) -> UploadRequest
   @discardableResult
-  open func upload(_ data: Foundation.Data, with urlRequest: GeoUniq.URLRequestConvertible) -> GeoUniq.UploadRequest
+  open func upload(_ data: Foundation.Data, with urlRequest: URLRequestConvertible) -> UploadRequest
   @discardableResult
-  open func upload(_ stream: Foundation.InputStream, to urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil) -> GeoUniq.UploadRequest
+  open func upload(_ stream: Foundation.InputStream, to urlString: URLStringConvertible, method: HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil) -> UploadRequest
   @discardableResult
-  open func upload(_ stream: Foundation.InputStream, with urlRequest: GeoUniq.URLRequestConvertible) -> GeoUniq.UploadRequest
-  open func upload(multipartFormData: @escaping (GeoUniq.MultipartFormData) -> Swift.Void, usingThreshold encodingMemoryThreshold: Swift.UInt64 = SessionManager.multipartFormDataEncodingMemoryThreshold, to urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil, encodingCompletion: ((GeoUniq.SessionManager.MultipartFormDataEncodingResult) -> Swift.Void)?)
-  open func upload(multipartFormData: @escaping (GeoUniq.MultipartFormData) -> Swift.Void, usingThreshold encodingMemoryThreshold: Swift.UInt64 = SessionManager.multipartFormDataEncodingMemoryThreshold, with urlRequest: GeoUniq.URLRequestConvertible, encodingCompletion: ((GeoUniq.SessionManager.MultipartFormDataEncodingResult) -> Swift.Void)?)
+  open func upload(_ stream: Foundation.InputStream, with urlRequest: URLRequestConvertible) -> UploadRequest
+  open func upload(multipartFormData: @escaping (MultipartFormData) -> Swift.Void, usingThreshold encodingMemoryThreshold: Swift.UInt64 = SessionManager.multipartFormDataEncodingMemoryThreshold, to urlString: URLStringConvertible, method: HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil, encodingCompletion: ((SessionManager.MultipartFormDataEncodingResult) -> Swift.Void)?)
+  open func upload(multipartFormData: @escaping (MultipartFormData) -> Swift.Void, usingThreshold encodingMemoryThreshold: Swift.UInt64 = SessionManager.multipartFormDataEncodingMemoryThreshold, with urlRequest: URLRequestConvertible, encodingCompletion: ((SessionManager.MultipartFormDataEncodingResult) -> Swift.Void)?)
   @discardableResult
-  open func stream(withHostName hostName: Swift.String, port: Swift.Int) -> GeoUniq.StreamRequest
+  open func stream(withHostName hostName: Swift.String, port: Swift.Int) -> StreamRequest
   @discardableResult
-  open func stream(with netService: Foundation.NetService) -> GeoUniq.StreamRequest
+  open func stream(with netService: Foundation.NetService) -> StreamRequest
 }
 extension UIAlertController {
   public func showPopUp()
@@ -1010,22 +1010,22 @@ extension UIAlertController {
 public protocol URLStringConvertible {
   var urlString: Swift.String { get }
 }
-extension String : GeoUniq.URLStringConvertible {
+extension String : URLStringConvertible {
   public var urlString: Swift.String {
     get
   }
 }
-extension URL : GeoUniq.URLStringConvertible {
+extension URL : URLStringConvertible {
   public var urlString: Swift.String {
     get
   }
 }
-extension URLComponents : GeoUniq.URLStringConvertible {
+extension URLComponents : URLStringConvertible {
   public var urlString: Swift.String {
     get
   }
 }
-extension URLRequest : GeoUniq.URLStringConvertible {
+extension URLRequest : URLStringConvertible {
   public var urlString: Swift.String {
     get
   }
@@ -1033,42 +1033,42 @@ extension URLRequest : GeoUniq.URLStringConvertible {
 public protocol URLRequestConvertible {
   var urlRequest: Foundation.URLRequest { get }
 }
-extension URLRequest : GeoUniq.URLRequestConvertible {
+extension URLRequest : URLRequestConvertible {
   public var urlRequest: Foundation.URLRequest {
     get
   }
 }
 extension URLRequest {
-  public init(urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod, headers: [Swift.String : Swift.String]? = nil)
+  public init(urlString: URLStringConvertible, method: HTTPMethod, headers: [Swift.String : Swift.String]? = nil)
 }
 @discardableResult
-public func request(_ urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod = .get, parameters: GeoUniq.Parameters? = nil, encoding: GeoUniq.ParameterEncoding = URLEncoding.default, headers: [Swift.String : Swift.String]? = nil) -> GeoUniq.DataRequest
+public func request(_ urlString: URLStringConvertible, method: HTTPMethod = .get, parameters: Parameters? = nil, encoding: ParameterEncoding = URLEncoding.default, headers: [Swift.String : Swift.String]? = nil) -> DataRequest
 @discardableResult
-public func request(resource urlRequest: GeoUniq.URLRequestConvertible) -> GeoUniq.DataRequest
+public func request(resource urlRequest: URLRequestConvertible) -> DataRequest
 @discardableResult
-public func download(_ urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod = .get, parameters: GeoUniq.Parameters? = nil, encoding: GeoUniq.ParameterEncoding = URLEncoding.default, headers: [Swift.String : Swift.String]? = nil, to destination: GeoUniq.DownloadRequest.DownloadFileDestination? = nil) -> GeoUniq.DownloadRequest
+public func download(_ urlString: URLStringConvertible, method: HTTPMethod = .get, parameters: Parameters? = nil, encoding: ParameterEncoding = URLEncoding.default, headers: [Swift.String : Swift.String]? = nil, to destination: DownloadRequest.DownloadFileDestination? = nil) -> DownloadRequest
 @discardableResult
-public func download(resource urlRequest: GeoUniq.URLRequestConvertible, to destination: GeoUniq.DownloadRequest.DownloadFileDestination? = nil) -> GeoUniq.DownloadRequest
+public func download(resource urlRequest: URLRequestConvertible, to destination: DownloadRequest.DownloadFileDestination? = nil) -> DownloadRequest
 @discardableResult
-public func download(resourceWithin resumeData: Foundation.Data, to destination: GeoUniq.DownloadRequest.DownloadFileDestination? = nil) -> GeoUniq.DownloadRequest
+public func download(resourceWithin resumeData: Foundation.Data, to destination: DownloadRequest.DownloadFileDestination? = nil) -> DownloadRequest
 @discardableResult
-public func upload(_ fileURL: Foundation.URL, to urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil) -> GeoUniq.UploadRequest
+public func upload(_ fileURL: Foundation.URL, to urlString: URLStringConvertible, method: HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil) -> UploadRequest
 @discardableResult
-public func upload(_ fileURL: Foundation.URL, with urlRequest: GeoUniq.URLRequestConvertible) -> GeoUniq.UploadRequest
+public func upload(_ fileURL: Foundation.URL, with urlRequest: URLRequestConvertible) -> UploadRequest
 @discardableResult
-public func upload(_ data: Foundation.Data, to urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil) -> GeoUniq.UploadRequest
+public func upload(_ data: Foundation.Data, to urlString: URLStringConvertible, method: HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil) -> UploadRequest
 @discardableResult
-public func upload(_ data: Foundation.Data, with urlRequest: GeoUniq.URLRequestConvertible) -> GeoUniq.UploadRequest
+public func upload(_ data: Foundation.Data, with urlRequest: URLRequestConvertible) -> UploadRequest
 @discardableResult
-public func upload(_ stream: Foundation.InputStream, to urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil) -> GeoUniq.UploadRequest
+public func upload(_ stream: Foundation.InputStream, to urlString: URLStringConvertible, method: HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil) -> UploadRequest
 @discardableResult
-public func upload(_ stream: Foundation.InputStream, with urlRequest: GeoUniq.URLRequestConvertible) -> GeoUniq.UploadRequest
-public func upload(multipartFormData: @escaping (GeoUniq.MultipartFormData) -> Swift.Void, usingThreshold encodingMemoryThreshold: Swift.UInt64 = SessionManager.multipartFormDataEncodingMemoryThreshold, to urlString: GeoUniq.URLStringConvertible, method: GeoUniq.HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil, encodingCompletion: ((GeoUniq.SessionManager.MultipartFormDataEncodingResult) -> Swift.Void)?)
-public func upload(multipartFormData: @escaping (GeoUniq.MultipartFormData) -> Swift.Void, usingThreshold encodingMemoryThreshold: Swift.UInt64 = SessionManager.multipartFormDataEncodingMemoryThreshold, with urlRequest: GeoUniq.URLRequestConvertible, encodingCompletion: ((GeoUniq.SessionManager.MultipartFormDataEncodingResult) -> Swift.Void)?)
+public func upload(_ stream: Foundation.InputStream, with urlRequest: URLRequestConvertible) -> UploadRequest
+public func upload(multipartFormData: @escaping (MultipartFormData) -> Swift.Void, usingThreshold encodingMemoryThreshold: Swift.UInt64 = SessionManager.multipartFormDataEncodingMemoryThreshold, to urlString: URLStringConvertible, method: HTTPMethod = .post, headers: [Swift.String : Swift.String]? = nil, encodingCompletion: ((SessionManager.MultipartFormDataEncodingResult) -> Swift.Void)?)
+public func upload(multipartFormData: @escaping (MultipartFormData) -> Swift.Void, usingThreshold encodingMemoryThreshold: Swift.UInt64 = SessionManager.multipartFormDataEncodingMemoryThreshold, with urlRequest: URLRequestConvertible, encodingCompletion: ((SessionManager.MultipartFormDataEncodingResult) -> Swift.Void)?)
 @discardableResult
-public func stream(withHostName hostName: Swift.String, port: Swift.Int) -> GeoUniq.StreamRequest
+public func stream(withHostName hostName: Swift.String, port: Swift.Int) -> StreamRequest
 @discardableResult
-public func stream(with netService: Foundation.NetService) -> GeoUniq.StreamRequest
+public func stream(with netService: Foundation.NetService) -> StreamRequest
 @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class CustomEndpoint : ObjectiveC.NSObject {
   @objc open var url: Swift.String? {
     @objc get
@@ -1086,20 +1086,20 @@ public func stream(with netService: Foundation.NetService) -> GeoUniq.StreamRequ
 }
 @_inheritsConvenienceInitializers @objc public class CustomEndpointBuilder : ObjectiveC.NSObject {
   @objc override dynamic public init()
-  @objc public init(customEndpoint: GeoUniq.CustomEndpoint)
-  @objc open func setUrl(url: Swift.String) throws -> GeoUniq.CustomEndpointBuilder
-  @objc open func setHeader(key: Swift.String, value: Swift.String) -> GeoUniq.CustomEndpointBuilder
-  @objc open func removeHeader(key: Swift.String) -> GeoUniq.CustomEndpointBuilder
-  @objc open func setHeaders(headers: [Swift.String : Swift.String]) -> GeoUniq.CustomEndpointBuilder
-  @objc open func removeAllHeaders() -> GeoUniq.CustomEndpointBuilder
-  @objc open func setQueryStringParameter(key: Swift.String, value: Swift.String) -> GeoUniq.CustomEndpointBuilder
-  @objc open func setQueryStringParameters(parameters: [Swift.String : Swift.String]) -> GeoUniq.CustomEndpointBuilder
-  @objc open func removeQueryStringParameter(key: Swift.String) -> GeoUniq.CustomEndpointBuilder
-  @objc open func removeAllQueryStringParameters() -> GeoUniq.CustomEndpointBuilder
-  @objc open func setCustomData(data: [Swift.String : Swift.AnyObject]) throws -> GeoUniq.CustomEndpointBuilder
-  @objc open func removeCustomData() -> GeoUniq.CustomEndpointBuilder
-  @objc open func setEnabled(enabled: Swift.Bool) -> GeoUniq.CustomEndpointBuilder
-  @objc open func build() throws -> GeoUniq.CustomEndpoint
+  @objc public init(customEndpoint: CustomEndpoint)
+  @objc open func setUrl(url: Swift.String) throws -> CustomEndpointBuilder
+  @objc open func setHeader(key: Swift.String, value: Swift.String) -> CustomEndpointBuilder
+  @objc open func removeHeader(key: Swift.String) -> CustomEndpointBuilder
+  @objc open func setHeaders(headers: [Swift.String : Swift.String]) -> CustomEndpointBuilder
+  @objc open func removeAllHeaders() -> CustomEndpointBuilder
+  @objc open func setQueryStringParameter(key: Swift.String, value: Swift.String) -> CustomEndpointBuilder
+  @objc open func setQueryStringParameters(parameters: [Swift.String : Swift.String]) -> CustomEndpointBuilder
+  @objc open func removeQueryStringParameter(key: Swift.String) -> CustomEndpointBuilder
+  @objc open func removeAllQueryStringParameters() -> CustomEndpointBuilder
+  @objc open func setCustomData(data: [Swift.String : Swift.AnyObject]) throws -> CustomEndpointBuilder
+  @objc open func removeCustomData() -> CustomEndpointBuilder
+  @objc open func setEnabled(enabled: Swift.Bool) -> CustomEndpointBuilder
+  @objc open func build() throws -> CustomEndpoint
   @objc deinit
 }
 @objc public enum CustomEndpointException : Swift.Int, Swift.Error {
@@ -1123,7 +1123,7 @@ public func stream(with netService: Foundation.NetService) -> GeoUniq.StreamRequ
 @objc public protocol GURealTimeReceiver {
   @objc init()
   @objc func onPositionListened(_ location: CoreLocation.CLLocation)
-  @objc func onError(_ guError: GeoUniq.GUError, error: Swift.Error?)
+  @objc func onError(_ guError: GUError, error: Swift.Error?)
 }
 public typealias isGranted = ((Swift.Bool) -> ())
 open class MultipartFormData {
@@ -1153,9 +1153,9 @@ extension Request {
   }
 }
 extension DataRequest {
-  public typealias Validation = (Foundation.URLRequest?, Foundation.HTTPURLResponse, Foundation.Data?) -> GeoUniq.Request.ValidationResult
+  public typealias Validation = (Foundation.URLRequest?, Foundation.HTTPURLResponse, Foundation.Data?) -> Request.ValidationResult
   @discardableResult
-  public func validate(_ validation: @escaping GeoUniq.DataRequest.Validation) -> Self
+  public func validate(_ validation: @escaping DataRequest.Validation) -> Self
   @discardableResult
   public func validate<S>(statusCode acceptableStatusCodes: S) -> Self where S : Swift.Sequence, S.Element == Swift.Int
   @discardableResult
@@ -1164,9 +1164,9 @@ extension DataRequest {
   public func validate() -> Self
 }
 extension DownloadRequest {
-  public typealias Validation = (Foundation.URLRequest?, Foundation.HTTPURLResponse, Foundation.URL?, Foundation.URL?) -> GeoUniq.Request.ValidationResult
+  public typealias Validation = (Foundation.URLRequest?, Foundation.HTTPURLResponse, Foundation.URL?, Foundation.URL?) -> Request.ValidationResult
   @discardableResult
-  public func validate(_ validation: @escaping GeoUniq.DownloadRequest.Validation) -> Self
+  public func validate(_ validation: @escaping DownloadRequest.Validation) -> Self
   @discardableResult
   public func validate<S>(statusCode acceptableStatusCodes: S) -> Self where S : Swift.Sequence, S.Element == Swift.Int
   @discardableResult
@@ -1207,11 +1207,11 @@ extension GUGeoPoint : Foundation.NSCopying {
   @objc dynamic public func copy(with zone: ObjectiveC.NSZone? = nil) -> Any
 }
 @objc open class GUCircularArea : ObjectiveC.NSObject, Foundation.NSCopying {
-  @objc open var center: GeoUniq.GUGeoPoint
+  @objc open var center: GUGeoPoint
   @objc open var radius: Swift.Double
   @objc open var name: Swift.String?
   @objc open var areaDescription: Swift.String?
-  @objc public init(center: GeoUniq.GUGeoPoint, radius: Swift.Double, name: Swift.String?, areaDescription: Swift.String?)
+  @objc public init(center: GUGeoPoint, radius: Swift.Double, name: Swift.String?, areaDescription: Swift.String?)
   @objc public init(latitude: Swift.Double, longitude: Swift.Double, radius: Swift.Double, name: Swift.String?, areaDescription: Swift.String?)
   @objc public func copy(with zone: ObjectiveC.NSZone? = nil) -> Any
   @objc override dynamic open var description: Swift.String {
@@ -1220,30 +1220,30 @@ extension GUGeoPoint : Foundation.NSCopying {
   @objc deinit
   @objc override dynamic public init()
 }
-@objc public protocol GUOnlineStreaming : GeoUniq.GUPositionReceiver {
+@objc public protocol GUOnlineStreaming : GUPositionReceiver {
   @objc func getIdentifier() -> Swift.String
 }
 public protocol PersistenceProtocol {
   associatedtype returnType
-  func storeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI, key: Swift.String)
-  static func removeWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI, key: Swift.String) -> Swift.Bool
-  static func readWithKey(persistenceManager: GeoUniq.PersistenceManagerAPI, key: Swift.String) -> Self.returnType?
+  func storeWithKey(persistenceManager: PersistenceManagerAPI, key: Swift.String)
+  static func removeWithKey(persistenceManager: PersistenceManagerAPI, key: Swift.String) -> Swift.Bool
+  static func readWithKey(persistenceManager: PersistenceManagerAPI, key: Swift.String) -> Self.returnType?
 }
 public typealias JSON = [Swift.String : Swift.AnyObject]
 public protocol JsonParserProtocol {
   associatedtype DecodableType
-  static func decodeJsonObject(json: GeoUniq.JSON) -> Self.DecodableType?
-  static func decodeJsonObject(json: GeoUniq.JSON?) -> Self.DecodableType?
-  static func decodeJsonObject(json: [GeoUniq.JSON]) -> [Self.DecodableType?]
-  static func decodeJsonObject(json: [GeoUniq.JSON]?) -> [Self.DecodableType?]
-  func encodeJsonObject() -> GeoUniq.JSON?
+  static func decodeJsonObject(json: JSON) -> Self.DecodableType?
+  static func decodeJsonObject(json: JSON?) -> Self.DecodableType?
+  static func decodeJsonObject(json: [JSON]) -> [Self.DecodableType?]
+  static func decodeJsonObject(json: [JSON]?) -> [Self.DecodableType?]
+  func encodeJsonObject() -> JSON?
   func serializationToJsonString() -> Swift.String?
   static func deserializationJsonString(jsonString: Swift.String) -> Self.DecodableType?
 }
 extension JsonParserProtocol {
-  public static func decodeJsonObject(json: GeoUniq.JSON?) -> Self.DecodableType?
-  public static func decodeJsonObject(json: [GeoUniq.JSON]) -> [Self.DecodableType?]
-  public static func decodeJsonObject(json: [GeoUniq.JSON]?) -> [Self.DecodableType?]
+  public static func decodeJsonObject(json: JSON?) -> Self.DecodableType?
+  public static func decodeJsonObject(json: [JSON]) -> [Self.DecodableType?]
+  public static func decodeJsonObject(json: [JSON]?) -> [Self.DecodableType?]
   public func serializationToJsonString() -> Swift.String?
   public static func deserializationJsonString(jsonString: Swift.String) -> Self.DecodableType?
 }
@@ -1254,19 +1254,19 @@ extension JsonParserProtocol {
   case cycling
   case automotive
   case unknown
-  public static func allValues() -> [GeoUniq.GUMotionType]
+  public static func allValues() -> [GUMotionType]
   public func getDescription() -> Swift.String
   public var description: Swift.String {
     get
   }
-  public static func == (lhs: GeoUniq.GUMotionType, rhs: GeoUniq.GUMotionType) -> Swift.Bool
+  public static func == (lhs: GUMotionType, rhs: GUMotionType) -> Swift.Bool
   public typealias RawValue = Swift.Int
   public init?(rawValue: Swift.Int)
   public var rawValue: Swift.Int {
     get
   }
 }
-@objc @_inheritsConvenienceInitializers open class SessionDelegate : ObjectiveC.NSObject {
+@objc @_inheritsConvenienceInitializers open class GuSessionDelegate : ObjectiveC.NSObject {
   open var sessionDidBecomeInvalidWithError: ((Foundation.URLSession, Swift.Error?) -> Swift.Void)?
   open var sessionDidReceiveChallenge: ((Foundation.URLSession, Foundation.URLAuthenticationChallenge) -> (Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?))?
   open var sessionDidReceiveChallengeWithCompletion: ((Foundation.URLSession, Foundation.URLAuthenticationChallenge, (Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?) -> Swift.Void) -> Swift.Void)?
@@ -1292,7 +1292,7 @@ extension JsonParserProtocol {
   open var streamTaskWriteClosed: ((Foundation.URLSession, Foundation.URLSessionStreamTask) -> Swift.Void)?
   open var streamTaskBetterRouteDiscovered: ((Foundation.URLSession, Foundation.URLSessionStreamTask) -> Swift.Void)?
   open var streamTaskDidBecomeInputAndOutputStreams: ((Foundation.URLSession, Foundation.URLSessionStreamTask, Foundation.InputStream, Foundation.OutputStream) -> Swift.Void)?
-  open subscript(task: Foundation.URLSessionTask) -> GeoUniq.Request? {
+  open subscript(task: Foundation.URLSessionTask) -> Request? {
     get
     set
   }
@@ -1300,57 +1300,57 @@ extension JsonParserProtocol {
   @objc override dynamic open func responds(to selector: ObjectiveC.Selector) -> Swift.Bool
   @objc deinit
 }
-extension SessionDelegate : Foundation.URLSessionDelegate {
+extension GuSessionDelegate : Foundation.URLSessionDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, didBecomeInvalidWithError error: Swift.Error?)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, didReceive challenge: Foundation.URLAuthenticationChallenge, completionHandler: @escaping (Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?) -> Swift.Void)
   @objc dynamic open func urlSessionDidFinishEvents(forBackgroundURLSession session: Foundation.URLSession)
 }
-extension SessionDelegate : Foundation.URLSessionTaskDelegate {
+extension GuSessionDelegate : Foundation.URLSessionTaskDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, willPerformHTTPRedirection response: Foundation.HTTPURLResponse, newRequest request: Foundation.URLRequest, completionHandler: @escaping (Foundation.URLRequest?) -> Swift.Void)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didReceive challenge: Foundation.URLAuthenticationChallenge, completionHandler: @escaping (Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?) -> Swift.Void)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, needNewBodyStream completionHandler: @escaping (Foundation.InputStream?) -> Swift.Void)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didSendBodyData bytesSent: Swift.Int64, totalBytesSent: Swift.Int64, totalBytesExpectedToSend: Swift.Int64)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didCompleteWithError error: Swift.Error?)
 }
-extension SessionDelegate : Foundation.URLSessionDataDelegate {
+extension GuSessionDelegate : Foundation.URLSessionDataDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, didReceive response: Foundation.URLResponse, completionHandler: @escaping (Foundation.URLSession.ResponseDisposition) -> Swift.Void)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, didBecome downloadTask: Foundation.URLSessionDownloadTask)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, didReceive data: Foundation.Data)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, willCacheResponse proposedResponse: Foundation.CachedURLResponse, completionHandler: @escaping (Foundation.CachedURLResponse?) -> Swift.Void)
 }
-extension SessionDelegate : Foundation.URLSessionDownloadDelegate {
+extension GuSessionDelegate : Foundation.URLSessionDownloadDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, downloadTask: Foundation.URLSessionDownloadTask, didFinishDownloadingTo location: Foundation.URL)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, downloadTask: Foundation.URLSessionDownloadTask, didWriteData bytesWritten: Swift.Int64, totalBytesWritten: Swift.Int64, totalBytesExpectedToWrite: Swift.Int64)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, downloadTask: Foundation.URLSessionDownloadTask, didResumeAtOffset fileOffset: Swift.Int64, expectedTotalBytes: Swift.Int64)
 }
-extension SessionDelegate : Foundation.URLSessionStreamDelegate {
+extension GuSessionDelegate : Foundation.URLSessionStreamDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, readClosedFor streamTask: Foundation.URLSessionStreamTask)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, writeClosedFor streamTask: Foundation.URLSessionStreamTask)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, betterRouteDiscoveredFor streamTask: Foundation.URLSessionStreamTask)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, streamTask: Foundation.URLSessionStreamTask, didBecome inputStream: Foundation.InputStream, outputStream: Foundation.OutputStream)
 }
-extension GeoUniq.NetworkReachabilityManager.ConnectionType : Swift.Equatable {}
-extension GeoUniq.NetworkReachabilityManager.ConnectionType : Swift.Hashable {}
-extension GeoUniq.GUSort : Swift.Equatable {}
-extension GeoUniq.GUSort : Swift.Hashable {}
-extension GeoUniq.GUSort : Swift.RawRepresentable {}
-extension GeoUniq.HTTPMethod : Swift.Equatable {}
-extension GeoUniq.HTTPMethod : Swift.Hashable {}
-extension GeoUniq.HTTPMethod : Swift.RawRepresentable {}
-extension GeoUniq.URLEncoding.Destination : Swift.Equatable {}
-extension GeoUniq.URLEncoding.Destination : Swift.Hashable {}
-extension GeoUniq.GUGeofence.Status : Swift.Equatable {}
-extension GeoUniq.GUGeofence.Status : Swift.Hashable {}
-extension GeoUniq.GUGeofence.Status : Swift.RawRepresentable {}
-extension GeoUniq.ConsentItem : Swift.Equatable {}
-extension GeoUniq.ConsentItem : Swift.Hashable {}
-extension GeoUniq.ConsentItem : Swift.RawRepresentable {}
-extension GeoUniq.GUError : Swift.Equatable {}
-extension GeoUniq.GUError : Swift.Hashable {}
-extension GeoUniq.GUError : Swift.RawRepresentable {}
-extension GeoUniq.CustomEndpointException : Swift.Equatable {}
-extension GeoUniq.CustomEndpointException : Swift.Hashable {}
-extension GeoUniq.CustomEndpointException : Swift.RawRepresentable {}
-extension GeoUniq.GUMotionType : Swift.Equatable {}
-extension GeoUniq.GUMotionType : Swift.Hashable {}
-extension GeoUniq.GUMotionType : Swift.RawRepresentable {}
+extension NetworkReachabilityManager.ConnectionType : Swift.Equatable {}
+extension NetworkReachabilityManager.ConnectionType : Swift.Hashable {}
+extension GUSort : Swift.Equatable {}
+extension GUSort : Swift.Hashable {}
+extension GUSort : Swift.RawRepresentable {}
+extension HTTPMethod : Swift.Equatable {}
+extension HTTPMethod : Swift.Hashable {}
+extension HTTPMethod : Swift.RawRepresentable {}
+extension URLEncoding.Destination : Swift.Equatable {}
+extension URLEncoding.Destination : Swift.Hashable {}
+extension GUGeofence.Status : Swift.Equatable {}
+extension GUGeofence.Status : Swift.Hashable {}
+extension GUGeofence.Status : Swift.RawRepresentable {}
+extension ConsentItem : Swift.Equatable {}
+extension ConsentItem : Swift.Hashable {}
+extension ConsentItem : Swift.RawRepresentable {}
+extension GUError : Swift.Equatable {}
+extension GUError : Swift.Hashable {}
+extension GUError : Swift.RawRepresentable {}
+extension CustomEndpointException : Swift.Equatable {}
+extension CustomEndpointException : Swift.Hashable {}
+extension CustomEndpointException : Swift.RawRepresentable {}
+extension GUMotionType : Swift.Equatable {}
+extension GUMotionType : Swift.Hashable {}
+extension GUMotionType : Swift.RawRepresentable {}

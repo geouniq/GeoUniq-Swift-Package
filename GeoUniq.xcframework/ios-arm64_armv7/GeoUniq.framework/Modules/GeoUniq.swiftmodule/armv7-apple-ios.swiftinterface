@@ -965,7 +965,7 @@ open class SessionManager {
   public static let defaultHTTPHeaders: [Swift.String : Swift.String]
   public static let multipartFormDataEncodingMemoryThreshold: Swift.UInt64
   final public let session: Foundation.URLSession
-  final public let delegate: SessionDelegate
+  final public let delegate: GuSessionDelegate
   open var startRequestsImmediately: Swift.Bool
   open var adapter: RequestAdapter?
   open var retrier: RequestRetrier? {
@@ -973,8 +973,8 @@ open class SessionManager {
     set
   }
   open var backgroundCompletionHandler: (() -> Swift.Void)?
-  public init(configuration: Foundation.URLSessionConfiguration = URLSessionConfiguration.default, delegate: SessionDelegate = SessionDelegate(), serverTrustPolicyManager: ServerTrustPolicyManager? = nil)
-  public init?(session: Foundation.URLSession, delegate: SessionDelegate, serverTrustPolicyManager: ServerTrustPolicyManager? = nil)
+  public init(configuration: Foundation.URLSessionConfiguration = URLSessionConfiguration.default, delegate: GuSessionDelegate = GuSessionDelegate(), serverTrustPolicyManager: ServerTrustPolicyManager? = nil)
+  public init?(session: Foundation.URLSession, delegate: GuSessionDelegate, serverTrustPolicyManager: ServerTrustPolicyManager? = nil)
   @objc deinit
   @discardableResult
   open func request(_ urlString: URLStringConvertible, method: HTTPMethod = .get, parameters: Parameters? = nil, encoding: ParameterEncoding = URLEncoding.default, headers: [Swift.String : Swift.String]? = nil) -> DataRequest
@@ -1266,7 +1266,7 @@ extension JsonParserProtocol {
     get
   }
 }
-@objc @_inheritsConvenienceInitializers open class SessionDelegate : ObjectiveC.NSObject {
+@objc @_inheritsConvenienceInitializers open class GuSessionDelegate : ObjectiveC.NSObject {
   open var sessionDidBecomeInvalidWithError: ((Foundation.URLSession, Swift.Error?) -> Swift.Void)?
   open var sessionDidReceiveChallenge: ((Foundation.URLSession, Foundation.URLAuthenticationChallenge) -> (Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?))?
   open var sessionDidReceiveChallengeWithCompletion: ((Foundation.URLSession, Foundation.URLAuthenticationChallenge, (Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?) -> Swift.Void) -> Swift.Void)?
@@ -1300,30 +1300,30 @@ extension JsonParserProtocol {
   @objc override dynamic open func responds(to selector: ObjectiveC.Selector) -> Swift.Bool
   @objc deinit
 }
-extension SessionDelegate : Foundation.URLSessionDelegate {
+extension GuSessionDelegate : Foundation.URLSessionDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, didBecomeInvalidWithError error: Swift.Error?)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, didReceive challenge: Foundation.URLAuthenticationChallenge, completionHandler: @escaping (Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?) -> Swift.Void)
   @objc dynamic open func urlSessionDidFinishEvents(forBackgroundURLSession session: Foundation.URLSession)
 }
-extension SessionDelegate : Foundation.URLSessionTaskDelegate {
+extension GuSessionDelegate : Foundation.URLSessionTaskDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, willPerformHTTPRedirection response: Foundation.HTTPURLResponse, newRequest request: Foundation.URLRequest, completionHandler: @escaping (Foundation.URLRequest?) -> Swift.Void)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didReceive challenge: Foundation.URLAuthenticationChallenge, completionHandler: @escaping (Foundation.URLSession.AuthChallengeDisposition, Foundation.URLCredential?) -> Swift.Void)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, needNewBodyStream completionHandler: @escaping (Foundation.InputStream?) -> Swift.Void)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didSendBodyData bytesSent: Swift.Int64, totalBytesSent: Swift.Int64, totalBytesExpectedToSend: Swift.Int64)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didCompleteWithError error: Swift.Error?)
 }
-extension SessionDelegate : Foundation.URLSessionDataDelegate {
+extension GuSessionDelegate : Foundation.URLSessionDataDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, didReceive response: Foundation.URLResponse, completionHandler: @escaping (Foundation.URLSession.ResponseDisposition) -> Swift.Void)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, didBecome downloadTask: Foundation.URLSessionDownloadTask)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, didReceive data: Foundation.Data)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, willCacheResponse proposedResponse: Foundation.CachedURLResponse, completionHandler: @escaping (Foundation.CachedURLResponse?) -> Swift.Void)
 }
-extension SessionDelegate : Foundation.URLSessionDownloadDelegate {
+extension GuSessionDelegate : Foundation.URLSessionDownloadDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, downloadTask: Foundation.URLSessionDownloadTask, didFinishDownloadingTo location: Foundation.URL)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, downloadTask: Foundation.URLSessionDownloadTask, didWriteData bytesWritten: Swift.Int64, totalBytesWritten: Swift.Int64, totalBytesExpectedToWrite: Swift.Int64)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, downloadTask: Foundation.URLSessionDownloadTask, didResumeAtOffset fileOffset: Swift.Int64, expectedTotalBytes: Swift.Int64)
 }
-extension SessionDelegate : Foundation.URLSessionStreamDelegate {
+extension GuSessionDelegate : Foundation.URLSessionStreamDelegate {
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, readClosedFor streamTask: Foundation.URLSessionStreamTask)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, writeClosedFor streamTask: Foundation.URLSessionStreamTask)
   @objc dynamic open func urlSession(_ session: Foundation.URLSession, betterRouteDiscoveredFor streamTask: Foundation.URLSessionStreamTask)
